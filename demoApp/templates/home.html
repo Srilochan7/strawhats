@@ -1,0 +1,392 @@
+
+{% load static %}
+<!DOCTYPE html>
+
+    <html lang="en">
+    
+      <head>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900 display=swap" rel="stylesheet">
+    
+        <title>Ehub | Admin</title>
+    
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--
+    
+    TemplateMo 546 Sixteen Clothing
+    
+    https://templatemo.com/tm-546-sixteen-clothing
+    
+    -->
+    
+        
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <!-- fontawesome icons -->
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+      crossorigin="anonymous"
+    />
+
+    <title>Task Management APP</title>
+    <style>
+       .brand__logo {
+    width: 15%;
+  }
+    </style>
+      </head>
+    
+      <body style="background-color: #ebf3ff" onload="loadExistingCards()">
+    
+        <!-- ***** Preloader Start ***** -->
+        <!-- ***** Preloader End ***** -->
+    
+
+        <div
+        class="modal fade"
+        id="newTask"
+        tabindex="-1"
+        aria-labelledby="newTaskLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="newTaskLabel">Modal title</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="imageURL" class="form-label"> Event Poster URL</label>
+                <input
+                  type="url"
+                  class="form-control"
+                  id="imageURL"
+                  placeholder="http://image.com/image.jpg"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="taskTitle" class="form-label">Event Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="taskTitle"
+                  placeholder="Ex:frost hack"
+                />
+                <div class="mb-3">
+                  <label for="taskType" class="form-label">Price</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="taskType"
+                    placeholder="amount"
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="taskType" class="form-label">Venue</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="taskType"
+                  placeholder="college address"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="taskDescription" class="form-label"
+                  >Event Description</label
+                >
+                <textarea
+                  id="taskDescription"
+                  class="form-control"
+                  rows="3"
+                  placeholder="About the event......."
+                ></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="addNewCard()"
+                data-bs-dismiss="modal"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+          <div class="container-fluid">
+            <img src="EHUB-LOGO.png" height="50" width="50" alt="logo" class="brand__logo" />
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+      
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'index' %}">Home
+                    <span class="sr-only">(current)</span>
+                  </a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'products' %}">Our Events</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'about' %}">About Us</a>
+                </li>
+              </ul>
+            </div>
+      
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#newTask">
+              <i class="far fa-plus"></i> Add New
+            </button>
+          </div>
+        </nav>
+      </header>
+      <main class="container">
+        <section class="row justify-content-center mt-5">
+          <div class="col-md-8 col-lg-6">
+            <div class="input-group mb-3 shadow">
+              <input
+                type="search"
+                class="form-control"
+                placeholder="Search Task"
+                aria-label="Search Task"
+                aria-describedby="basic-addon1"
+              />
+              <span class="input-group-text" id="basic-addon1">
+                <i class="far fa-search"></i>
+              </span>
+            </div>
+          </div>
+        </section>
+        <!-- Task Container -->
+        <section class="task__container row"></section>
+      </main>
+      <!-- JavaScript Bundle with Popper -->
+      <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+      ></script>
+      <script src="myfile.js"></script>
+
+
+<script>
+    const taskContainer = document.querySelector(".task__container");
+    let globalTaskData = [];
+    
+    const generateHTML = (taskData) => {
+      return ` <div id=${taskData.id} class="col-md-6 col-lg-4 my-4">
+    <div class="card">
+      <div class="card-header gap-2 d-flex justify-content-end">
+        <button class="btn btn-outline-info" name=${taskData.id} onclick="editCard.apply(this, arguments)" >
+          <i class="fal fa-pencil" name=${taskData.id}></i>
+        </button>
+        <button class="btn btn-outline-danger" name=${taskData.id} onclick="deleteCard.apply(this, arguments)">
+          <i class="far fa-trash-alt" name=${taskData.id}></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <img
+          src=${taskData.image}
+          alt="image"
+          class="card-img"
+        />
+        <h5 class="card-title mt-4">${taskData.title}</h5>
+        <p class="card-text">
+          ${taskData.description}
+        </p>
+        <span class="badge bg-primary">${taskData.type}</span>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-outline-primary" name=${taskData.id}>Open Task</button>
+      </div>
+    </div>
+    </div>`;
+    };
+    
+    const saveToLocalStorage = () =>
+      localStorage.setItem("taskyCA", JSON.stringify({ card: globalTaskData }));
+    
+    const insertToDOM = (content) =>
+      taskContainer.insertAdjacentHTML("beforeend", content);
+    
+    const addNewCard = () => {
+      // get task data
+      const taskData = {
+        id: `${Date.now()}`,
+        title: document.getElementById("taskTitle").value,
+        image: document.getElementById("imageURL").value,
+        type: document.getElementById("taskType").value,
+        description: document.getElementById("taskDescription").value,
+      };
+    
+      globalTaskData.push(taskData);
+    
+      saveToLocalStorage();
+    
+      const newCard = generateHTML(taskData);
+    
+      insertToDOM(newCard);
+    
+      // clear the form
+      document.getElementById("taskTitle").value = "";
+      document.getElementById("imageURL").value = "";
+      document.getElementById("taskType").value = "";
+      document.getElementById("taskDescription").value = "";
+    
+      return;
+    };
+    
+    const loadExistingCards = () => {
+      // check localstorage
+      const getData = localStorage.getItem("taskyCA");
+    
+      // parse JSON data, if exist
+      if (!getData) return;
+    
+      const taskCards = JSON.parse(getData);
+    
+      globalTaskData = taskCards.card;
+    
+      globalTaskData.map((taskData) => {
+        const newCard = generateHTML(taskData);
+        insertToDOM(newCard);
+      });
+    
+      return;
+    };
+    
+    const deleteCard = (event) => {
+      const targetID = event.target.getAttribute("name");
+      const elementType = event.target.tagName;
+    
+      const removeTask = globalTaskData.filter((task) => task.id !== targetID);
+      globalTaskData = removeTask;
+    
+    
+      saveToLocalStorage();
+    
+      // access DOM to remove card
+      if (elementType === "BUTTON") {
+        return taskContainer.removeChild(
+          event.target.parentNode.parentNode.parentNode
+        );
+      } else {
+        return taskContainer.removeChild(
+          event.target.parentNode.parentNode.parentNode.parentNode
+        );
+      }
+    };
+    
+    const editCard = (event) => {
+      const elementType = event.target.tagName;
+    
+      let taskTitle;
+      let taskType;
+      let taskDescription;
+      let parentElement;
+      let submitButton;
+    
+      if (elementType === "BUTTON") {
+        parentElement = event.target.parentNode.parentNode;
+      } else {
+        parentElement = event.target.parentNode.parentNode.parentNode;
+      }
+    
+      taskTitle = parentElement.childNodes[3].childNodes[3];
+      taskDescription = parentElement.childNodes[3].childNodes[5];
+      taskType = parentElement.childNodes[3].childNodes[7];
+      submitButton = parentElement.childNodes[5].childNodes[1];
+    
+      taskTitle.setAttribute("contenteditable", "true");
+      taskDescription.setAttribute("contenteditable", "true");
+      taskType.setAttribute("contenteditable", "true");
+      submitButton.setAttribute("onclick", "saveEdit.apply(this, arguments)");
+      submitButton.innerHTML = "Save Changes";
+    };
+    
+    const saveEdit = (event) => {
+      const targetID = event.target.getAttribute("name");
+      const elementType = event.target.tagName;
+    
+      let parentElement;
+    
+      if (elementType === "BUTTON") {
+        parentElement = event.target.parentNode.parentNode;
+      } else {
+        parentElement = event.target.parentNode.parentNode.parentNode;
+      }
+    
+      const taskTitle = parentElement.childNodes[3].childNodes[3];
+      const taskDescription = parentElement.childNodes[3].childNodes[5];
+      const taskType = parentElement.childNodes[3].childNodes[7];
+      const submitButton = parentElement.childNodes[5].childNodes[1];
+    
+      const updatedData = {
+        title: taskTitle.innerHTML,
+        type: taskType.innerHTML,
+        description: taskDescription.innerHTML,
+      };
+    
+      console.log({ updatedData, targetID });
+    
+      const updateGlobalTasks = globalTaskData.map((task) => {
+        if (task.id === targetID) {
+          console.log({ ...task, ...updatedData });
+          return { ...task, ...updatedData };
+        }
+        return task;
+      });
+    
+      globalTaskData = updateGlobalTasks;
+    
+      saveToLocalStorage();
+    
+      taskTitle.setAttribute("contenteditable", "false");
+      taskDescription.setAttribute("contenteditable", "false");
+      taskType.setAttribute("contenteditable", "false");
+      submitButton.innerHTML = "POST";
+    };
+    
+    // Strigify
+    // JS object -> JSON
+    
+    // Parse
+    // JSON -> JS objects
+    
+    // contenteditable = "true"
+
+</script>
+
+</body>
+</html>
